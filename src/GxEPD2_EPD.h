@@ -20,6 +20,8 @@
 #pragma GCC diagnostic ignored "-Wunused-parameter"
 //#pragma GCC diagnostic ignored "-Wsign-compare"
 
+void epd_delay(int delay);
+
 class GxEPD2_EPD
 {
   public:

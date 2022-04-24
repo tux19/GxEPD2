@@ -13,9 +13,6 @@
 
 #include "GxEPD2_750c_Z08.h"
 
-void epd_delay(int delay) {
-  sleep_ms(delay);
-}
 
 GxEPD2_750c_Z08::GxEPD2_750c_Z08(int16_t cs, int16_t dc, int16_t rst, int16_t busy) :
   GxEPD2_EPD(cs, dc, rst, busy, LOW, 20000000, WIDTH, HEIGHT, panel, hasColor, hasPartialUpdate, hasFastPartialUpdate)
