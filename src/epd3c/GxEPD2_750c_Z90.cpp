@@ -13,6 +13,11 @@
 
 #include "GxEPD2_750c_Z90.h"
 
+void epd_delay(int delay) {
+  sleep_ms(delay);
+}
+
+
 GxEPD2_750c_Z90::GxEPD2_750c_Z90(int16_t cs, int16_t dc, int16_t rst, int16_t busy) :
   GxEPD2_EPD(cs, dc, rst, busy, HIGH, 25000000, WIDTH, HEIGHT, panel, hasColor, hasPartialUpdate, hasFastPartialUpdate)
 {
@@ -63,7 +68,7 @@ void GxEPD2_750c_Z90::writeImage(const uint8_t bitmap[], int16_t x, int16_t y, i
 void GxEPD2_750c_Z90::writeImage(const uint8_t* black, const uint8_t* color, int16_t x, int16_t y, int16_t w, int16_t h, bool invert, bool mirror_y, bool pgm)
 {
   if (_initial_write) writeScreenBuffer(); // initial full screen buffer clean
-  delay(1); // yield() to avoid WDT on ESP8266 and ESP32
+  epd_delay(1); // yield() to avoid WDT on ESP8266 and ESP32
   uint16_t wb = (w + 7) / 8; // width bytes, bitmaps are padded
   x -= x % 8; // byte boundary
   w = wb * 8; // byte boundary
@@ -136,7 +141,7 @@ void GxEPD2_750c_Z90::writeImage(const uint8_t* black, const uint8_t* color, int
     }
   }
   _endTransfer();
-  delay(1); // yield() to avoid WDT on ESP8266 and ESP32
+  epd_delay(1); // yield() to avoid WDT on ESP8266 and ESP32
 }
 
 void GxEPD2_750c_Z90::writeImagePart(const uint8_t bitmap[], int16_t x_part, int16_t y_part, int16_t w_bitmap, int16_t h_bitmap,
@@ -149,7 +154,7 @@ void GxEPD2_750c_Z90::writeImagePart(const uint8_t* black, const uint8_t* color,
                                      int16_t x, int16_t y, int16_t w, int16_t h, bool invert, bool mirror_y, bool pgm)
 {
   if (_initial_write) writeScreenBuffer(); // initial full screen buffer clean
-  delay(1); // yield() to avoid WDT on ESP8266 and ESP32
+  epd_delay(1); // yield() to avoid WDT on ESP8266 and ESP32
   if ((w_bitmap < 0) || (h_bitmap < 0) || (w < 0) || (h < 0)) return;
   if ((x_part < 0) || (x_part >= w_bitmap)) return;
   if ((y_part < 0) || (y_part >= h_bitmap)) return;
@@ -225,7 +230,7 @@ void GxEPD2_750c_Z90::writeImagePart(const uint8_t* black, const uint8_t* color,
     }
   }
   _endTransfer();
-  delay(1); // yield() to avoid WDT on ESP8266 and ESP32
+  epd_delay(1); // yield() to avoid WDT on ESP8266 and ESP32
 }
 
 void GxEPD2_750c_Z90::writeNative(const uint8_t* data1, const uint8_t* data2, int16_t x, int16_t y, int16_t w, int16_t h, bool invert, bool mirror_y, bool pgm)

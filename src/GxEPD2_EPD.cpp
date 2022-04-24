@@ -17,6 +17,11 @@
 #include <avr/pgmspace.h>
 #endif
 
+void epd_delay(int delay) {
+  sleep_ms(delay);
+}
+
+
 GxEPD2_EPD::GxEPD2_EPD(int16_t cs, int16_t dc, int16_t rst, int16_t busy, int16_t busy_level, uint32_t busy_timeout,
                        uint16_t w, uint16_t h, GxEPD2::Panel p, bool c, bool pu, bool fpu) :
   WIDTH(w), HEIGHT(h), panel(p), hasColor(c), hasPartialUpdate(pu), hasFastPartialUpdate(fpu),
@@ -94,19 +99,19 @@ void GxEPD2_EPD::_reset()
     {
       digitalWrite(_rst, LOW);
       pinMode(_rst, OUTPUT);
-      delay(_reset_duration);
+      epd_delay(_reset_duration);
       pinMode(_rst, INPUT_PULLUP);
-      delay(_reset_duration > 10 ? _reset_duration : 10);
+      epd_delay(_reset_duration > 10 ? _reset_duration : 10);
     }
     else
     {
       digitalWrite(_rst, HIGH); // NEEDED for Waveshare "clever" reset circuit, power controller before reset pulse
       pinMode(_rst, OUTPUT);
-      delay(10); // NEEDED for Waveshare "clever" reset circuit, at least delay(2);
+      epd_delay(10); // NEEDED for Waveshare "clever" reset circuit, at least epd_delay(2);
       digitalWrite(_rst, LOW);
-      delay(_reset_duration);
+      epd_delay(_reset_duration);
       digitalWrite(_rst, HIGH);
-      delay(_reset_duration > 10 ? _reset_duration : 10);
+      epd_delay(_reset_duration > 10 ? _reset_duration : 10);
     }
     _hibernating = false;
   }
@@ -116,13 +121,13 @@ void GxEPD2_EPD::_waitWhileBusy(const char* comment, uint16_t busy_time)
 {
   if (_busy >= 0)
   {
-    delay(1); // add some margin to become active
+    epd_delay(1); // add some margin to become active
     unsigned long start = micros();
     while (1)
     {
       if (digitalRead(_busy) != _busy_level) break;
       if (_busy_callback) _busy_callback(_busy_callback_parameter);
-      else delay(1);
+      else epd_delay(1);
       if (digitalRead(_busy) != _busy_level) break;
       if (micros() - start > _busy_timeout)
       {
@@ -147,7 +152,7 @@ void GxEPD2_EPD::_waitWhileBusy(const char* comment, uint16_t busy_time)
     }
     (void) start;
   }
-  else delay(busy_time);
+  else epd_delay(busy_time);
 }
 
 void GxEPD2_EPD::_writeCommand(uint8_t c)
